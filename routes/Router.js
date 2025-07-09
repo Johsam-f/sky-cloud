@@ -9,11 +9,13 @@ router.get('/', (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-    res.render('login');
+    res.render('auth/login', {
+        error: req.query.error || null
+    });
 });
 
 router.get('/signup',() => {
-    res.render('signup', { errors: [], formData: {} });
+    res.render('auth/signup', { errors: [], formData: {} });
 });
 
 router.post('/signup', validateSignup, signupSubmit);
@@ -23,3 +25,5 @@ router.post('/login', passport.authenticate('local', {
     failureRedirect: '/login',
     failureFlash: true
 }));
+
+module.exports = router;

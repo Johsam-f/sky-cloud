@@ -9,9 +9,15 @@
   <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
     <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Login</h2>
 
-    <% if (error) { %>
+    <% if (errorMessages && errorMessages.length > 0) { %>
       <div class="bg-red-100 text-red-700 p-2 rounded mb-4 text-sm">
-        <%= error %>
+        <%= errorMessages[0] %>
+      </div>
+    <% } %>
+    
+    <% if (successMessages && successMessages.length > 0) { %>
+      <div class="">
+        <%= successMessages[0] %>
       </div>
     <% } %>
 
