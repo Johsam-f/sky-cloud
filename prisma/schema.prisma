@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String?  @unique
+  email     String   @unique
+  password  String?
+  googleId  String?  @unique
+  role      Role     @default(USER)
+  files     File[]
+  createdAt DateTime @default(now())
+}
+
+model File {
+  id           String      @id @default(uuid())
+  user         User        @relation(fields: [userId], references: [id])
+  userId       String
+  originalName String
+  storedName   String // the filename saved on disk or cloud
+  mimeType     String
+  size         Int
+  visibility   Visibility  @default(PRIVATE)
+  uploadedAt   DateTime    @default(now())
+  shareLinks   ShareLink[]
+}
+
+model ShareLink {
+  id        String    @id @default(uuid())
+  file      File      @relation(fields: [fileId], references: [id])
+  fileId    String
+  token     String    @unique
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
+}

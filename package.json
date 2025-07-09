@@ -1,0 +1,26 @@
+{
+  "name": "sky-drive",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Johsam-f/sky-drive.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Johsam-f/sky-drive/issues"
+  },
+  "homepage": "https://github.com/Johsam-f/sky-drive#readme",
+  "devDependencies": {
+    "prisma": "^6.11.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.11.1"
+  }
+}
