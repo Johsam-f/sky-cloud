@@ -2,13 +2,9 @@ const { body } = require('express-validator');
 const { findUserByEmail } = require('../models/userModel');
 
 exports.validateSignup = [
-  body('first_name')
+  body('username')
     .trim()
-    .notEmpty().withMessage('First name is required'),
-
-  body('last_name')
-    .trim()
-    .notEmpty().withMessage('Last name is required'),
+    .notEmpty().withMessage('username is required'),
 
   body('email')
     .trim()

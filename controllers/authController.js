@@ -4,15 +4,20 @@ const { createUser } = require('../models/userModel');
 
 exports.signupSubmit = async (req, res) => {
     const errors = validationResult(req);
+    const { username, email, password, confirmPassword } = req.body;
+    const formData = { username, email };
 
-    const { username, email, password } = req.body;
+    if (password !== confirmPassword) {
+        req.flash('error', 'Passwords do not match');
+        return res.render('auth/signup', { formData });
+    }
 
     if (!errors.isEmpty()) {
-        return res.render('auth/signup', {
-            errors: errors.array(),
-            formData: { username, email }
-        });
+        const firstError = errors.array()[0].msg;
+        req.flash('error', firstError);
+        return res.redirect('/signup');
     }
+
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,8 +31,8 @@ exports.signupSubmit = async (req, res) => {
         res.redirect('/login');
     } catch (err) {
         console.error(err);
+        req.flash('error', 'Something went wrong. Try again.'),
         res.status(500).render('signup', {
-            errors: [{ msg: 'Something went wrong. Try again.' }],
             formData: { username, email },
         });
     }

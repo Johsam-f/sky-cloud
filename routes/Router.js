@@ -10,12 +10,14 @@ router.get('/', (req, res) => {
 
 router.get('/login', (req, res) => {
     res.render('auth/login', {
-        error: req.query.error || null
+      formData: {},
+      errorMessages: req.flash('error'),
+      successMessages: req.flash('success'),
     });
-});
+  });
 
-router.get('/signup',() => {
-    res.render('auth/signup', { errors: [], formData: {} });
+router.get('/signup',(req, res) => {
+    res.render('auth/signup', { formData: {} });
 });
 
 router.post('/signup', validateSignup, signupSubmit);
