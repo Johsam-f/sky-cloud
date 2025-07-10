@@ -5,6 +5,7 @@ const { validateSignup } = require('../validators/authValidator');
 const { signupSubmit } = require('../controllers/authController');
 const upload = require('../middlewares/upload');
 const dashboardController = require('../controllers/dashboardController');
+const shareRoutes = require('./shareRoutes');
 
 const dashboardRoutes = require('./dashboard');
 const publicRoutes = require('./public'); // <-- NEW
@@ -60,6 +61,7 @@ router.post('/dashboard/folders', ensureAuthenticated, dashboardController.postC
 router.post('/dashboard/upload', ensureAuthenticated, upload.single('file'), dashboardController.postUploadFile);
 
 // Public share links
-router.use('/', publicRoutes); // <-- NEW
+router.use('/', publicRoutes); 
+router.use('/', shareRoutes);
 
 module.exports = router;
