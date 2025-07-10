@@ -1,5 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../prisma');
 
 const createUser = async ({ username, email, password, role = 'USER' }) => {
   return await prisma.user.create({
