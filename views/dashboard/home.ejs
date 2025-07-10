@@ -37,8 +37,11 @@
         <li class="text-gray-400 italic text-sm">No folders created</li>
       <% } else { %>
         <% folders.forEach(folder => { %>
-          <li class="px-2 py-1 rounded hover:bg-gray-700 cursor-default">
-            <%= folder.name %>
+          <li class="flex justify-between items-center px-2 py-1 rounded hover:bg-gray-700">
+            <span><%= folder.name %></span>
+            <form action="/dashboard/folder/<%= folder.id %>/delete" method="POST" onsubmit="return confirm('Delete this folder and all its contents?');">
+              <button type="submit" class="text-red-500 hover:text-red-400 text-sm">Delete</button>
+            </form>
           </li>
         <% }) %>
       <% } %>
@@ -91,64 +94,22 @@
 
     <!-- Files List -->
     <section>
-        <h2 class="text-xl font-semibold mb-4">Your Files</h2>
-      
-        <% if (files.length === 0) { %>
-          <p class="text-gray-400 italic">No files uploaded yet.</p>
-        <% } else { %>
-          <div class="space-y-6">
-      
-            <% folders.forEach(folder => { %>
-              <div>
-                <h3 class="text-lg font-semibold mb-2 border-b border-gray-700 pb-1"><%= folder.name %></h3>
-                <ul class="space-y-2">
-                  <% const folderFiles = files.filter(f => f.folderId === folder.id); %>
-                  <% if (folderFiles.length === 0) { %>
-                    <li class="text-gray-400 italic">No files in this folder</li>
-                  <% } else { %>
-                    <% folderFiles.forEach(file => { %>
-                      <li class="flex justify-between items-center bg-gray-800 p-3 rounded">
-                        <div>
-                          <strong><%= file.originalName %></strong><br />
-                          <span class="text-sm text-gray-400">
-                            <%= (file.size / 1024).toFixed(1) %> KB - 
-                            <%= new Date(file.uploadedAt).toLocaleString() %>
-                          </span>
-                        </div>
-                        <div class="flex space-x-4">
-                          <a 
-                            href="/dashboard/file/<%= file.id %>/download" 
-                            class="text-blue-400 hover:underline"
-                            title="Download"
-                          >
-                            Download
-                          </a>
-                          <form 
-                            action="/dashboard/file/<%= file.id %>/delete" 
-                            method="POST" 
-                            onsubmit="return confirm('Are you sure you want to delete this file?');"
-                          >
-                            <button type="submit" class="text-red-500 hover:text-red-400">
-                              Delete
-                            </button>
-                          </form>
-                        </div>
-                      </li>
-                    <% }) %>
-                  <% } %>
-                </ul>
-              </div>
-            <% }) %>
-      
-            <!-- Files without folder -->
-            <div class="mt-6">
-              <h3 class="text-lg font-semibold mb-2 border-b border-gray-700 pb-1">Unsorted Files</h3>
+      <h2 class="text-xl font-semibold mb-4">Your Files</h2>
+
+      <% if (files.length === 0) { %>
+        <p class="text-gray-400 italic">No files uploaded yet.</p>
+      <% } else { %>
+        <div class="space-y-6">
+
+          <% folders.forEach(folder => { %>
+            <div>
+              <h3 class="text-lg font-semibold mb-2 border-b border-gray-700 pb-1"><%= folder.name %></h3>
               <ul class="space-y-2">
-                <% const noFolderFiles = files.filter(f => !f.folderId); %>
-                <% if (noFolderFiles.length === 0) { %>
-                  <li class="text-gray-400 italic">No unsorted files</li>
+                <% const folderFiles = files.filter(f => f.folderId === folder.id); %>
+                <% if (folderFiles.length === 0) { %>
+                  <li class="text-gray-400 italic">No files in this folder</li>
                 <% } else { %>
-                  <% noFolderFiles.forEach(file => { %>
+                  <% folderFiles.forEach(file => { %>
                     <li class="flex justify-between items-center bg-gray-800 p-3 rounded">
                       <div>
                         <strong><%= file.originalName %></strong><br />
@@ -158,21 +119,9 @@
                         </span>
                       </div>
                       <div class="flex space-x-4">
-                        <a 
-                          href="/dashboard/file/<%= file.id %>/download" 
-                          class="text-blue-400 hover:underline"
-                          title="Download"
-                        >
-                          Download
-                        </a>
-                        <form 
-                          action="/dashboard/file/<%= file.id %>/delete" 
-                          method="POST" 
-                          onsubmit="return confirm('Are you sure you want to delete this file?');"
-                        >
-                          <button type="submit" class="text-red-500 hover:text-red-400">
-                            Delete
-                          </button>
+                        <a href="/dashboard/file/<%= file.id %>/download" class="text-blue-400 hover:underline">Download</a>
+                        <form action="/dashboard/file/<%= file.id %>/delete" method="POST" onsubmit="return confirm('Delete this file?');">
+                          <button type="submit" class="text-red-500 hover:text-red-400">Delete</button>
                         </form>
                       </div>
                     </li>
@@ -180,11 +129,40 @@
                 <% } %>
               </ul>
             </div>
-      
+          <% }) %>
+
+          <!-- Files without folder -->
+          <div class="mt-6">
+            <h3 class="text-lg font-semibold mb-2 border-b border-gray-700 pb-1">Unsorted Files</h3>
+            <ul class="space-y-2">
+              <% const noFolderFiles = files.filter(f => !f.folderId); %>
+              <% if (noFolderFiles.length === 0) { %>
+                <li class="text-gray-400 italic">No unsorted files</li>
+              <% } else { %>
+                <% noFolderFiles.forEach(file => { %>
+                  <li class="flex justify-between items-center bg-gray-800 p-3 rounded">
+                    <div>
+                      <strong><%= file.originalName %></strong><br />
+                      <span class="text-sm text-gray-400">
+                        <%= (file.size / 1024).toFixed(1) %> KB - 
+                        <%= new Date(file.uploadedAt).toLocaleString() %>
+                      </span>
+                    </div>
+                    <div class="flex space-x-4">
+                      <a href="/dashboard/file/<%= file.id %>/download" class="text-blue-400 hover:underline">Download</a>
+                      <form action="/dashboard/file/<%= file.id %>/delete" method="POST" onsubmit="return confirm('Delete this file?');">
+                        <button type="submit" class="text-red-500 hover:text-red-400">Delete</button>
+                      </form>
+                    </div>
+                  </li>
+                <% }) %>
+              <% } %>
+            </ul>
           </div>
-        <% } %>
-      </section>
-      
+
+        </div>
+      <% } %>
+    </section>
 
   </main>
 

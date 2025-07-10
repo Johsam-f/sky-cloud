@@ -7,6 +7,7 @@ const upload = require('../middlewares/upload');
 const dashboardController = require('../controllers/dashboardController');
 
 const dashboardRoutes = require('./dashboard');
+const publicRoutes = require('./public'); // <-- NEW
 
 // Auth pages
 router.get('/', (req, res) => {
@@ -57,5 +58,8 @@ router.use('/dashboard', dashboardRoutes);
 router.get('/dashboard', ensureAuthenticated, dashboardController.getDashboard);
 router.post('/dashboard/folders', ensureAuthenticated, dashboardController.postCreateFolder);
 router.post('/dashboard/upload', ensureAuthenticated, upload.single('file'), dashboardController.postUploadFile);
+
+// Public share links
+router.use('/', publicRoutes); // <-- NEW
 
 module.exports = router;
