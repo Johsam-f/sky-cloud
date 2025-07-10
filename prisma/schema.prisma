@@ -14,6 +14,7 @@ model User {
   password  String
   role      Role     @default(USER)
   files     File[]
+  folders   Folder[]
   createdAt DateTime @default(now())
 }
 
@@ -21,13 +22,25 @@ model File {
   id           String      @id @default(uuid())
   user         User        @relation(fields: [userId], references: [id])
   userId       String
+  folder       Folder?     @relation(fields: [folderId], references: [id])
+  folderId     String? // nullable for files not in any folder
   originalName String
-  storedName   String // the filename saved on disk or cloud
+  storedName   String
   mimeType     String
   size         Int
   visibility   Visibility  @default(PRIVATE)
   uploadedAt   DateTime    @default(now())
   shareLinks   ShareLink[]
+}
+
+model Folder {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  files     File[] // Files inside this folder
 }
 
 model ShareLink {
