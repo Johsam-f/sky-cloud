@@ -7,28 +7,26 @@ exports.signupSubmit = async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
   const errors = validationResult(req);
 
-  // Preserve user input
-  req.flash('formData', { username, email });
-
-  if (password !== confirmPassword) {
-    req.flash('error', 'Passwords do not match');
-    return res.redirect('/signup');
-  }
-
   if (!errors.isEmpty()) {
-    errors.array().forEach(err => req.flash('error', err.msg));
-    return res.redirect('/signup');
+    return  res.render('auth/signup', { 
+      formData: { username, email },
+      errorMessages: errors.array()
+    });
   }
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     await createUser({ username, email, password: hashedPassword });
 
-    req.flash('success', 'Signup successful! Please log in.');
-    return res.redirect('/login');
+    return res.render(
+      'auth/login', 
+      { formData: {}, errorMessages: [], successMessages: ['Signup successful! Please log in.'] }
+    );
   } catch (err) {
     console.error(err);
-    req.flash('error', 'Something went wrong. Please try again.');
-    return res.redirect('/signup');
+    return  res.render('auth/signup', { 
+      formData: { username, email },
+      errorMessages: [ { msg: 'failed to sign up. Please try again.' } ] 
+    });
   }
 };

@@ -9,7 +9,7 @@
   <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md">
     <h2 class="text-2xl font-semibold text-center mb-6">Log In</h2>
 
-    <% if (errorMessages && errorMessages.length) { %>
+    <% if (errorMessages.length > 0) { %>
       <div class="bg-red-600 text-white p-3 rounded mb-4">
         <% errorMessages.forEach(msg => { %>
           <p><%= msg %></p>

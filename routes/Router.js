@@ -8,7 +8,7 @@ const dashboardController = require('../controllers/dashboardController');
 const shareRoutes = require('./shareRoutes');
 
 const dashboardRoutes = require('./dashboard');
-const publicRoutes = require('./public'); // <-- NEW
+const publicRoutes = require('./public'); 
 
 // Auth pages
 router.get('/', (req, res) => {
@@ -16,16 +16,11 @@ router.get('/', (req, res) => {
 });
 
 router.get('/signup', (req, res) => {
-  const formData = req.flash('formData')[0] || {};
-  const errorMessages = req.flash('error');
-  res.render('auth/signup', { formData, errorMessages });
+  res.render('auth/signup', { formData: {}, errorMessages: [] });
 });
 
 router.get('/login', (req, res) => {
-  const formData = req.flash('formData')[0] || {};
-  const errorMessages = req.flash('error');
-  const successMessages = req.flash('success');
-  res.render('auth/login', { formData, errorMessages, successMessages });
+  res.render('auth/login', { formData: {} });
 });
 
 // Auth handlers
@@ -35,9 +30,7 @@ router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) return next(err);
     if (!user) {
-      req.flash('error', info.message);
-      req.flash('formData', { email: req.body.email });
-      return req.session.save(() => res.redirect('/login'));
+      return res.render('auth/login', { formData: { email: req.body.email }, errorMessages: [ info.message ] });
     }
 
     req.logIn(user, err => {
@@ -46,6 +39,7 @@ router.post('/login', (req, res, next) => {
     });
   })(req, res, next);
 });
+
 
 router.get('/logout', (req, res, next) => {
   req.logout(err => {
