@@ -31,6 +31,7 @@ model File {
   visibility   Visibility  @default(PRIVATE)
   uploadedAt   DateTime    @default(now())
   shareLinks   ShareLink[]
+  shared       Boolean     @default(false)
 }
 
 model Folder {
