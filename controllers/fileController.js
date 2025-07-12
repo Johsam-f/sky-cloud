@@ -13,12 +13,17 @@ exports.toggleShare = async (req, res) => {
       return res.redirect('/dashboard');
     }
 
+    const isNowShared = !file.shared;
+
     const updatedFile = await prisma.file.update({
       where: { id },
-      data: { shared: !file.shared },
+      data: {
+        shared: isNowShared,
+        visibility: isNowShared ? 'PUBLIC' : 'PRIVATE',
+      },
     });
 
-    req.flash('success', updatedFile.shared ? 'File shared!' : 'File unshared.');
+    req.flash('success', isNowShared ? 'File shared!' : 'File unshared.');
     res.redirect(`/dashboard/file/${id}`);
   } catch (err) {
     console.error(err);
@@ -26,6 +31,7 @@ exports.toggleShare = async (req, res) => {
     res.redirect('/dashboard');
   }
 };
+
 
 exports.getFile = async (req, res) => {
   const id = req.params.id;
