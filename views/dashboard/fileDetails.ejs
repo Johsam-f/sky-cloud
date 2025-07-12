@@ -12,9 +12,31 @@
     <p><strong>Size:</strong> <%= (file.size / 1024).toFixed(2) %> KB</p>
     <p><strong>Uploaded At:</strong> <%= new Date(file.uploadedAt).toLocaleString() %></p>
     <p><strong>Visibility:</strong> <%= file.visibility %></p>
-
-    <a href="/dashboard/file/<%= file.id %>/download" 
-       class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Download</a>
+    <div class="flex justify-between w-full mt-4 space-x-2">
+      <!-- Download Button -->
+      <a href="/dashboard/file/<%= file.id %>/download" 
+        class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white text-sm">
+        Download
+      </a>
+    
+      <!-- Toggle Share Form -->
+      <form action="/dashboard/file/<%= file.id %>/toggle-share" method="POST">
+        <button type="submit" 
+          class="<%= file.shared ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600' %> px-4 py-2 rounded text-white text-sm"
+        >
+          <%= file.shared ? 'Unshare' : 'Share' %>
+        </button>
+      </form>
+    
+      <!-- Delete Form -->
+      <form action="/dashboard/file/<%= file.id %>/delete" method="POST" onsubmit="return confirm('Delete this file?');">
+        <button type="submit" 
+          class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white text-sm">
+          Delete
+        </button>
+      </form>
+    </div>
+  
   </div>
   
   <a href="/dashboard" class="mt-6 text-blue-400 hover:underline">Back to Dashboard</a>

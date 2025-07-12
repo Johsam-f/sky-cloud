@@ -4,11 +4,12 @@ const { passport, ensureAuthenticated } = require('../middlewares/auth');
 const { validateSignup } = require('../validators/authValidator');
 const { signupSubmit } = require('../controllers/authController');
 const upload = require('../middlewares/upload');
-const dashboardController = require('../controllers/dashboardController');
-const shareRoutes = require('./shareRoutes');
+const { getDashboard, postCreateFolder, postUploadFile  } = require('../controllers/dashboardController');
+const { toggleShare, getFile, getSharedFile } = require('../controllers/fileController');
 
 const dashboardRoutes = require('./dashboard');
-const publicRoutes = require('./public'); 
+
+const prisma = require('../prisma');
 
 // Auth pages
 router.get('/', (req, res) => {
@@ -50,12 +51,13 @@ router.get('/logout', (req, res, next) => {
 
 // Dashboard
 router.use('/dashboard', dashboardRoutes);
-router.get('/dashboard', ensureAuthenticated, dashboardController.getDashboard);
-router.post('/dashboard/folders', ensureAuthenticated, dashboardController.postCreateFolder);
-router.post('/dashboard/upload', ensureAuthenticated, upload.single('file'), dashboardController.postUploadFile);
-
-// Public share links
-router.use('/', publicRoutes); 
-router.use('/', shareRoutes);
+router.get('/dashboard', ensureAuthenticated, getDashboard);
+// file handlers
+router.get('/dashboard/file/:id', ensureAuthenticated, getFile);
+router.get('/dashboard/sharedFile/:id', ensureAuthenticated, getSharedFile);
+router.post('/dashboard/file/:id/toggle-share', ensureAuthenticated, toggleShare );
+router.post('/dashboard/upload', ensureAuthenticated, upload.single('file'), postUploadFile);
+//folder handlers
+router.post('/dashboard/folders', ensureAuthenticated, postCreateFolder);
 
 module.exports = router;

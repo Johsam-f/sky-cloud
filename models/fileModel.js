@@ -20,4 +20,26 @@ async function getUserFiles(userId) {
   });
 }
 
-module.exports = { createFile, getUserFiles };
+async function getSharedFiles(userId) {
+  return await prisma.file.findMany({
+    where: {
+      shared: true,
+      userId: {
+        not: userId, // exclude current user
+      },
+    },
+    include: {
+      user: {
+        select: {
+          username: true,
+          email: true,
+        }
+      },
+    },
+    orderBy: {
+      uploadedAt: 'desc',
+    }
+  });
+}
+
+module.exports = { createFile, getUserFiles, getSharedFiles };

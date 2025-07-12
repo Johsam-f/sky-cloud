@@ -1,5 +1,5 @@
 const { createFolder, getUserFolders } = require('../models/folderModel');
-const { createFile, getUserFiles } = require('../models/fileModel');
+const { createFile, getUserFiles, getSharedFiles } = require('../models/fileModel');
 const path = require('path');
 
 exports.getDashboard = async (req, res) => {
@@ -7,13 +7,21 @@ exports.getDashboard = async (req, res) => {
     const userId = req.user.id;
     const folders = await getUserFolders(userId);
     const files = await getUserFiles(userId);
-    res.render('dashboard/home', { folders, files });
+    const sharedFiles = await getSharedFiles(userId);
+
+    res.render('dashboard/home', {
+      folders,
+      files,
+      sharedFiles
+    });
+
   } catch (err) {
     console.error(err);
     req.flash('error', 'Failed to load dashboard.');
     res.redirect('/');
   }
 };
+
 
 exports.postCreateFolder = async (req, res) => {
   try {

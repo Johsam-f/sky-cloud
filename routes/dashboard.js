@@ -11,26 +11,6 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
 });
 
-// GET /dashboard - Show dashboard with folders and files
-router.get('/', ensureAuthenticated, async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const folders = await prisma.folder.findMany({ where: { userId } });
-    const files = await prisma.file.findMany({ where: { userId } });
-
-    res.render('dashboard/home', {
-      folders,
-      files,
-      errorMessages: req.flash('error'),
-      successMessages: req.flash('success'),
-    });
-  } catch (err) {
-    console.error(err);
-    req.flash('error', 'Failed to load dashboard');
-    res.redirect('/');
-  }
-});
-
 // POST /dashboard/folder/create - Create a folder
 router.post('/folder/create', ensureAuthenticated, async (req, res) => {
   try {

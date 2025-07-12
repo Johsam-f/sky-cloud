@@ -4,14 +4,12 @@
   <meta charset="UTF-8" />
   <title>Dashboard - Sky Cloud</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet" />
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex">
 
   <!-- Sidebar -->
   <aside class="w-64 bg-gray-800 p-6 flex flex-col space-y-6">
 
-    <a href="/logout" class="hover:text-red-400"><i class="fa fa-sign-out"></i> Logout</a>
     <h2 class="text-xl font-semibold mb-4">Folders</h2>
 
     <!-- Create Folder Form -->
@@ -29,7 +27,7 @@
         type="submit"
         class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded text-white font-semibold transition duration-200"
       >
-      <i class="fas fa-folder"></i> Create Folder
+        Create Folder
       </button>
     </form>
 
@@ -39,11 +37,8 @@
         <li class="text-gray-400 italic text-sm">No folders created</li>
       <% } else { %>
         <% folders.forEach(folder => { %>
-          <li class="flex justify-between items-center px-2 py-1 rounded hover:bg-gray-700">
-            <span><%= folder.name %></span>
-            <form action="/dashboard/folder/<%= folder.id %>/delete" method="POST" onsubmit="return confirm('Delete this folder and all its contents?');">
-              <button type="submit" class="text-red-500 hover:text-red-400 text-sm">Delete</button>
-            </form>
+          <li class="px-2 py-1 rounded hover:bg-gray-700 cursor-default">
+            <%= folder.name %>
           </li>
         <% }) %>
       <% } %>
@@ -55,26 +50,10 @@
   <main class="flex-1 p-6 overflow-auto">
 
     <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
-    <% if (successMessages && successMessages.length > 0) { %>
-        <div class="bg-green-800 text-green-100 p-3 mb-4 rounded">
-          <% successMessages.forEach(msg => { %>
-            <p><%= msg %></p>
-          <% }) %>
-        </div>
-      <% } %>
-      
-      <% if (errorMessages && errorMessages.length > 0) { %>
-        <div class="bg-red-800 text-red-100 p-3 mb-4 rounded">
-          <% errorMessages.forEach(msg => { %>
-            <p><%= msg %></p>
-          <% }) %>
-        </div>
-    <% } %>
-      
 
     <!-- Upload File Form -->
     <section class="mb-10 max-w-lg">
-      <h2 class="text-xl font-semibold mb-3"><i class="fas fa-upload"></i> Upload File</h2>
+      <h2 class="text-xl font-semibold mb-3">Upload File</h2>
       <form action="/dashboard/upload" method="POST" enctype="multipart/form-data" class="space-y-4">
         <div>
           <label for="file" class="block mb-1 text-sm">Choose file</label>
@@ -105,14 +84,14 @@
           type="submit" 
           class="bg-green-600 hover:bg-green-700 text-white py-2 rounded font-semibold transition duration-200 w-full"
         >
-        <i class="fas fa-upload"></i> Upload
+          Upload
         </button>
       </form>
     </section>
 
     <!-- Files List -->
     <section>
-      <h2 class="text-xl font-semibold mb-4"><i class="fas fa-file"></i> Your Files</h2>
+      <h2 class="text-xl font-semibold mb-4">Your Files</h2>
 
       <% if (files.length === 0) { %>
         <p class="text-gray-400 italic">No files uploaded yet.</p>
@@ -122,21 +101,14 @@
           <% folders.forEach(folder => { %>
             <div>
               <h3 class="text-lg font-semibold mb-2 border-b border-gray-700 pb-1"><%= folder.name %></h3>
-              <ul class="space-y-2">
+              <ul class="list-disc pl-5 space-y-1">
                 <% const folderFiles = files.filter(f => f.folderId === folder.id); %>
                 <% if (folderFiles.length === 0) { %>
                   <li class="text-gray-400 italic">No files in this folder</li>
                 <% } else { %>
                   <% folderFiles.forEach(file => { %>
-                    <li class="flex justify-between items-center bg-gray-800 hover:bg-gray-700 rounded hover:bg-gray-700">
-                      <a href="/dashboard/file/<%= file.id %>" class="w-full h-full p-1">
-                        <strong><%= file.originalName %></strong><br />
-                        <span class="text-sm text-gray-400">
-                          <%= (file.size / 1024).toFixed(1) %> KB - 
-                          <%= new Date(file.uploadedAt).toLocaleString() %>
-                        </span>
-                      </a>
-                      
+                    <li>
+                      <strong><%= file.originalName %></strong> - <%= (file.size / 1024).toFixed(1) %> KB - <%= new Date(file.uploadedAt).toLocaleString() %>
                     </li>
                   <% }) %>
                 <% } %>
@@ -147,20 +119,14 @@
           <!-- Files without folder -->
           <div class="mt-6">
             <h3 class="text-lg font-semibold mb-2 border-b border-gray-700 pb-1">Unsorted Files</h3>
-            <ul class="space-y-2">
+            <ul class="list-disc pl-5 space-y-1">
               <% const noFolderFiles = files.filter(f => !f.folderId); %>
               <% if (noFolderFiles.length === 0) { %>
                 <li class="text-gray-400 italic">No unsorted files</li>
               <% } else { %>
                 <% noFolderFiles.forEach(file => { %>
-                  <li class="flex justify-between items-center bg-gray-800 rounded hover:bg-gray-700">
-                    <a href="/dashboard/file/<%= file.id %>" class="w-full h-full p-1">
-                      <strong><%= file.originalName %></strong><br />
-                      <span class="text-sm text-gray-400">
-                        <%= (file.size / 1024).toFixed(1) %> KB - 
-                        <%= new Date(file.uploadedAt).toLocaleString() %>
-                      </span>
-                    </a>                      
+                  <li>
+                    <strong><%= file.originalName %></strong> - <%= (file.size / 1024).toFixed(1) %> KB - <%= new Date(file.uploadedAt).toLocaleString() %>
                   </li>
                 <% }) %>
               <% } %>
@@ -171,32 +137,8 @@
       <% } %>
     </section>
 
-    <!-- Shared Files Section -->
-    <section class="mt-10">
-      <h2 class="text-xl font-semibold mb-4">Shared files</h2>
-
-      <% if (sharedFiles.length === 0) { %>
-        <p class="text-gray-400 italic">No one shared files for the public yet.</p>
-      <% } else { %>
-        <ul class="space-y-2">
-          <% sharedFiles.forEach(file => { %>
-            <li class="flex justify-between items-center bg-gray-800 rounded hover:bg-gray-700">
-              <a href="/dashboard/sharedFile/<%= file.id %>" class="w-full h-full p-1">
-                <strong><%= file.originalName %></strong><br />
-                <span class="text-sm text-gray-400">
-                  <%= (file.size / 1024).toFixed(1) %> KB —
-                  Shared by <%= file.user.username || file.user.email %> on 
-                  <%= new Date(file.uploadedAt).toLocaleString() %>
-                </span>
-              </a>
-            </li>
-          <% }) %>
-        </ul>
-      <% } %>
-    </section>
-
-
   </main>
 
 </body>
 </html>
+
