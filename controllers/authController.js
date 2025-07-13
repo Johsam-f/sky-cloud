@@ -30,3 +30,24 @@ exports.signupSubmit = async (req, res) => {
     });
   }
 };
+
+exports.logInSubmit = (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      return res.render('auth/login', { formData: { email: req.body.email }, errorMessages: [ info.message ] });
+    }
+
+    req.logIn(user, err => {
+      if (err) return next(err);
+      return res.redirect('/dashboard');
+    });
+  })(req, res, next);
+}
+
+exports.logout = (req, res, next) => {
+  req.logout(err => {
+    if (err) return next(err);
+    res.redirect('/login');
+  });
+}
