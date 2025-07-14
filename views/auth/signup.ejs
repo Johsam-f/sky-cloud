@@ -2,15 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up - Sky Cloud</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center">
-  <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md">
+<body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center px-4">
+
+  <div class="w-full max-w-md bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg">
+
     <h2 class="text-2xl font-semibold text-center mb-6">Create Your Account</h2>
 
     <% if (errorMessages.length > 0) { %>
-      <div class="bg-red-600 text-white p-3 rounded mb-4">
+      <div class="bg-red-600 text-white p-3 rounded mb-4 text-sm">
         <% errorMessages.forEach(error => { %>
           <p><%= error.msg %></p>
         <% }) %>
@@ -64,6 +67,8 @@
       Already have an account?
       <a href="/login" class="text-blue-400 hover:underline">Login</a>
     </p>
+
   </div>
+
 </body>
 </html>

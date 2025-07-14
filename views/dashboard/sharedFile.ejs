@@ -2,34 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shared File - Sky Cloud</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center p-6">
-  
-  <h1 class="text-3xl mb-6 font-bold">Shared File</h1>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center px-4 py-6">
 
-  <div class="bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-md space-y-4">
+  <h1 class="text-2xl sm:text-3xl font-bold mb-6 text-center">Shared File</h1>
+
+  <div class="bg-gray-800 w-full max-w-md p-4 sm:p-6 rounded-lg shadow-md space-y-4 text-sm sm:text-base">
 
     <div>
-      <p><strong>File Name:</strong> <%= file.originalName %></p>
-      <p><strong>Size:</strong> <%= (file.size / 1024).toFixed(2) %> KB</p>
-      <p><strong>Uploaded At:</strong> <%= new Date(file.uploadedAt).toLocaleString() %></p>
+      <p class="mb-1"><strong>File Name:</strong> <%= file.originalName %></p>
+      <p class="mb-1"><strong>Size:</strong> <%= (file.size / 1024).toFixed(2) %> KB</p>
+      <p class="mb-1"><strong>Uploaded At:</strong> <%= new Date(file.uploadedAt).toLocaleString() %></p>
     </div>
 
     <div>
       <p><strong>Owner:</strong> <%= file.user.username || file.user.email %></p>
     </div>
 
-    <div class="flex justify-end">
-      <a href="/dashboard/file/<%= file.id %>/download" 
-         class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white font-semibold transition duration-200">
+    <div class="flex justify-center sm:justify-end">
+      <a href="/dashboard/file/<%= file.id %>/download"
+         class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white font-semibold transition duration-200 w-full sm:w-auto text-center">
         Download
       </a>
     </div>
     
   </div>
 
-  <a href="/dashboard" class="mt-6 text-blue-400 hover:underline">← Back to Dashboard</a>
+  <a href="/dashboard" class="mt-6 text-blue-400 hover:underline text-sm">← Back to Dashboard</a>
+
 </body>
 </html>

@@ -2,43 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>File Details - Sky Cloud</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center p-6">
-  <h1 class="text-3xl mb-6">File Details</h1>
-  <div class="bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-md">
-    <p><strong>File Name:</strong> <%= file.originalName %></p>
-    <p><strong>Size:</strong> <%= (file.size / 1024).toFixed(2) %> KB</p>
-    <p><strong>Uploaded At:</strong> <%= new Date(file.uploadedAt).toLocaleString() %></p>
-    <p><strong>Visibility:</strong> <%= file.visibility %></p>
-    <div class="flex justify-between w-full mt-4 space-x-2">
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center px-4 py-6">
+
+  <h1 class="text-2xl sm:text-3xl font-semibold mb-6 text-center">File Details</h1>
+
+  <div class="bg-gray-800 w-full max-w-md p-4 sm:p-6 rounded-lg shadow-md text-sm sm:text-base">
+    <p class="mb-2"><strong>File Name:</strong> <%= file.originalName %></p>
+    <p class="mb-2"><strong>Size:</strong> <%= (file.size / 1024).toFixed(2) %> KB</p>
+    <p class="mb-2"><strong>Uploaded At:</strong> <%= new Date(file.uploadedAt).toLocaleString() %></p>
+    <p class="mb-4"><strong>Visibility:</strong> <%= file.visibility %></p>
+
+    <div class="flex flex-col sm:flex-row sm:justify-between gap-2">
       <!-- Download Button -->
-      <a href="/dashboard/file/<%= file.id %>/download" 
-        class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white text-sm">
+      <a href="/dashboard/file/<%= file.id %>/download"
+        class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white text-center">
         Download
       </a>
-    
+
       <!-- Toggle Share Form -->
-      <form action="/dashboard/file/<%= file.id %>/toggle-share" method="POST">
-        <button type="submit" 
-          class="<%= file.shared ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600' %> px-4 py-2 rounded text-white text-sm"
-        >
+      <form action="/dashboard/file/<%= file.id %>/toggle-share" method="POST" class="w-full sm:w-auto">
+        <button type="submit"
+          class="<%= file.shared ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600' %> px-4 py-2 w-full sm:w-auto rounded text-white text-center">
           <%= file.shared ? 'Unshare' : 'Share' %>
         </button>
       </form>
-    
+
       <!-- Delete Form -->
-      <form action="/dashboard/file/<%= file.id %>/delete" method="POST" onsubmit="return confirm('Delete this file?');">
-        <button type="submit" 
-          class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white text-sm">
+      <form action="/dashboard/file/<%= file.id %>/delete" method="POST" onsubmit="return confirm('Delete this file?');" class="w-full sm:w-auto">
+        <button type="submit"
+          class="bg-red-500 hover:bg-red-600 px-4 py-2 w-full sm:w-auto rounded text-white text-center">
           Delete
         </button>
       </form>
     </div>
-  
   </div>
-  
-  <a href="/dashboard" class="mt-6 text-blue-400 hover:underline">Back to Dashboard</a>
+
+  <a href="/dashboard" class="mt-6 text-blue-400 hover:underline text-sm">← Back to Dashboard</a>
 </body>
 </html>
