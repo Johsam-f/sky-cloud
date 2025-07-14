@@ -1,4 +1,65 @@
 const prisma = require('../prisma');
+const cloudinary = require('../utils/cloudinary');
+const https = require('https');
+
+exports.downloadFile = async (req, res) => {
+  const fileId = req.params.id;
+
+  try {
+    const file = await prisma.file.findUnique({
+      where: { id: fileId }
+    });
+
+    if (!file || file.userId !== req.user.id) {
+      req.flash('error', 'File not found or unauthorized.');
+      return res.redirect('/dashboard');
+    }
+
+    https.get(file.url, (cloudRes) => {
+      res.setHeader('Content-Disposition', `attachment; filename="${file.name}"`);
+      res.setHeader('Content-Type', cloudRes.headers['content-type']);
+      cloudRes.pipe(res);
+    }).on('error', (err) => {
+      console.error('Cloudinary download error:', err);
+      req.flash('error', 'Download failed.');
+      res.redirect('/dashboard');
+    });
+
+  } catch (err) {
+    console.error('Download error:', err);
+    req.flash('error', 'Failed to download file.');
+    res.redirect('/dashboard');
+  }
+};
+
+exports.deleteFile = async (req, res) => {
+  const fileId = req.params.id;
+
+  try {
+    const file = await prisma.file.findUnique({
+      where: { id: fileId }
+    });
+
+    if (!file || file.userId !== req.user.id) {
+      req.flash('error', 'File not found or unauthorized.');
+      return res.redirect('/dashboard');
+    }
+
+    if (file.publicId) {
+      await cloudinary.uploader.destroy(file.publicId);
+    }
+
+    await prisma.file.delete({ where: { id: fileId } });
+
+    req.flash('success', 'File deleted.');
+    res.redirect('/dashboard');
+  } catch (err) {
+    console.error('Delete file error:', err);
+    req.flash('error', 'Failed to delete file.');
+    res.redirect('/dashboard');
+  }
+};
+
 
 exports.toggleShare = async (req, res) => {
   const { id } = req.params;
@@ -70,3 +131,4 @@ exports.getSharedFile = async (req, res) => {
     res.redirect('/dashboard');
   }
 }
+

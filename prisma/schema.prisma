@@ -25,13 +25,14 @@ model File {
   folder       Folder?     @relation(fields: [folderId], references: [id])
   folderId     String? // nullable for files not in any folder
   originalName String
-  storedName   String
-  mimeType     String
+  type         String
   size         Int
   visibility   Visibility  @default(PRIVATE)
   uploadedAt   DateTime    @default(now())
-  shareLinks   ShareLink[]
   shared       Boolean     @default(false)
+  url          String
+  ShareLink    ShareLink[]
+  publicId     String?
 }
 
 model Folder {
