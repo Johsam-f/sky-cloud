@@ -9,8 +9,7 @@ Sky Cloud is a secure and lightweight file uploader web application that allows 
 - User authentication (email/password + Google login)
 - Upload and download files securely
 - Mark files as public or private
-- Generate shareable public links
-- Role-based access (admin, user)
+- share file
 - Admin dashboard for user and file management
 
 ---
