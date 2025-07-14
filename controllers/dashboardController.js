@@ -1,6 +1,5 @@
 const { createFolder, getUserFolders } = require('../models/folderModel');
 const { createFile, getUserFiles, getSharedFiles } = require('../models/fileModel');
-const path = require('path');
 
 exports.getDashboard = async (req, res) => {
   try {
