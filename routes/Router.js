@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { passport, ensureAuthenticated } = require('../middlewares/auth');
+const { ensureAuthenticated } = require('../middlewares/auth');
 const { validateSignup } = require('../validators/authValidator');
 const { signupSubmit, logInSubmit, logout } = require('../controllers/authController');
 const upload = require('../middlewares/upload');
 const { getDashboard, postCreateFolder, postUploadFile  } = require('../controllers/dashboardController');
 const { toggleShare, getFile, getSharedFile } = require('../controllers/fileController');
-const dashboardRoutes = require('./dashboard');
 
 // Auth pages
 router.get('/', (req, res) => {
@@ -27,7 +26,6 @@ router.post('/login', logInSubmit);
 router.get('/logout', logout);
 
 // Dashboard
-router.use('/dashboard', dashboardRoutes);
 router.get('/dashboard', ensureAuthenticated, getDashboard);
 // file handlers
 router.get('/dashboard/file/:id', ensureAuthenticated, getFile);

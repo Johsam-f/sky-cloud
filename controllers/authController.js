@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const { createUser } = require('../models/userModel');
+const { passport } = require('../middlewares/auth');
 
 // Handle signup form submission
 exports.signupSubmit = async (req, res) => {
